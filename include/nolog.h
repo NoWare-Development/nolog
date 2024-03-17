@@ -8,6 +8,8 @@ typedef enum {
   LOG_LEVEL_TRACE = 3
 } LogLevel;
 
+void init_logger(void);
+void stop_logger(void);
 void log_message(LogLevel level, const char *message, ...);
 
 #define LOG_ERROR(msg, ...) log_message(LOG_LEVEL_ERROR, msg, ##__VA_ARGS__)

@@ -5,6 +5,8 @@ set(LIBRARY_NAME_SHARED nologshared)
 
 set(TEST_NAME test)
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ggdb")
+
 set(SOURCE
   "${CMAKE_SOURCE_DIR}/src/nolog.c"
   )
