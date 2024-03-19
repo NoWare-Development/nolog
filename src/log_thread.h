@@ -5,6 +5,5 @@
 
 void log_thread_start(Queue *q);
 void log_thread_stop(void);
-void *log_thread_print(void *);
 
 #endif // LOG_THREAD_H_

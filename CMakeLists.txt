@@ -1,18 +1,19 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.5)
 
-set(LIBRARY_NAME_STATIC nologstatic)
-set(LIBRARY_NAME_SHARED nologshared)
+#
+### LIBRARY
+#
+set(LIBRARY_NAME nolog)
+project(${LIBRARY_NAME})
 
-set(TEST_NAME test)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ggdb")
-
-if (UNIX AND NOT APPLE)
-  set (PLATFORM "-DPLATFORM_LINUX")
+if(UNIX AND NOT APPLE)
+  message(STATUS "Compiling for Linux...")
 elseif(WIN32)
-  set (PLATFORM "-DPLATFORM_WIN32")
+  message(STATUS "Compiling for Windows...")
 else()
-  set (PLATFORM "-DPLATFORM_UNKNOWN")
+  message(SEND_ERROR "Unknown platform. Your OS is not supported.")
 endif()
 
 set(SOURCE
@@ -22,14 +23,14 @@ set(SOURCE
   "${CMAKE_SOURCE_DIR}/src/log_queue.c"
   )
 
-add_library(nologobj OBJECT ${SOURCE})
-target_include_directories(nologobj PUBLIC "${CMAKE_SOURCE_DIR}/include")
-target_compile_definitions(nologobj PUBLIC ${PLATFORM})
-set_property(TARGET nologobj PROPERTY POSITION_INDEPENDENT_CODE 1)
+add_library(${LIBRARY_NAME} SHARED ${SOURCE})
+set_property(TARGET ${LIBRARY_NAME} PROPERTY POSITION_INDEPENDENT_CODE 1)
+target_include_directories(${LIBRARY_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/include")
 
-add_library(${LIBRARY_NAME_SHARED} SHARED $<TARGET_OBJECTS:nologobj>)
-add_library(${LIBRARY_NAME_STATIC} STATIC $<TARGET_OBJECTS:nologobj>)
-
+#
+### TEST APPLICATION
+#
+set(TEST_NAME test)
 project(${TEST_NAME})
 
 set(TEST_SRC
@@ -38,5 +39,5 @@ set(TEST_SRC
 
 add_executable(${TEST_NAME} ${TEST_SRC})
 
-target_include_directories(${TEST_NAME} PUBLIC "${CMAKE_SOURCE_DIR}/include")
-target_link_libraries(${TEST_NAME} ${LIBRARY_NAME_STATIC})
+target_include_directories(${TEST_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/include")
+target_link_libraries(${TEST_NAME} ${LIBRARY_NAME})

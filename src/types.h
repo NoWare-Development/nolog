@@ -1,6 +1,8 @@
 #ifndef TYPES_H_
 #define TYPES_H_
 
+#include "platform.h"
+
 #define MAX_LOG_MESSAGE_SIZE 4096
 
 typedef struct {

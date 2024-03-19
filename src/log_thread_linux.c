@@ -13,6 +13,8 @@ static Queue *log_queue = 0;
 
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
+void *log_thread_print(void *);
+
 void log_thread_start(Queue *q) {
   is_running = 1;
 
